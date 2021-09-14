@@ -1179,7 +1179,74 @@ function initPaint(svgId, conf = null) {
     boxSizeList.push(redoBoxSizeList.pop());
   });
 
-  document.querySelector("#svg-clean").addEventListener("click", e => {
+function ShortCuts(e) {
+  var evtobj = window.event? event : e
+
+  //Ctrl + Z
+  if (evtobj.keyCode == 90 && evtobj.ctrlKey) {
+    if (undoList.length < 1) {
+      return;
+    }
+    let undoEle = undoList.pop();
+    undoEle.remove();
+    redoList.push(undoEle);
+    redoBoxSizeList.push(boxSizeList.pop());
+  }
+
+  // Ctrl + Y
+  if (evtobj.keyCode == 89 && evtobj.ctrlKey) {
+    if (redoList.length < 1) {
+      return;
+    }
+    let redoEle = redoList.pop();
+    svg.append(redoEle);
+    undoList.push(redoEle);
+    boxSizeList.push(redoBoxSizeList.pop());
+  }
+
+  //F4
+  if (evtobj.keyCode == 115) {
+    config.type = "pen";
+    e.pointerType = "pen";
+  }
+
+  //F6
+  if (evtobj.keyCode == 117) {
+    config.type = "eraser";
+    e.pointerType = "eraser";
+  }
+
+  //F7
+  if (evtobj.keyCode == 118) {
+    config.type = "rect";
+    e.pointerType = "rect";
+  }
+
+  //F8
+  if (evtobj.keyCode == 119) {
+    config.type = "circle";
+    e.pointerType = "circle";
+  }
+
+  //F9
+  if (evtobj.keyCode == 120) {
+    config.type = "select";
+    e.pointerType = "select";
+  }
+  
+  //F10
+  if (evtobj.keyCode == 121) {
+    undoList = [];
+    redoList = [];
+    boxSizeList = [];
+    redoBoxSizeList = [];
+    svg.innerHTML = "";
+  }
+
+}
+document.onkeydown = ShortCuts;
+
+  document.querySelector("#svg-clean").addEventListener("click", e => {Y
     undoList = [];
     redoList = [];
     boxSizeList = [];
@@ -1216,3 +1283,6 @@ function initPaint(svgId, conf = null) {
 }
 
 exports.initPaint = initPaint
+
+
+
